@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+      package="com.nuance.nmdp.sample"
+      android:versionCode="3"
+      android:versionName="1.2">
+
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"></uses-permission>
+    <uses-permission android:name="android.permission.INTERNET"></uses-permission>
+    <uses-permission android:name="android.permission.RECORD_AUDIO"></uses-permission>
+    <uses-permission android:name="android.permission.VIBRATE"></uses-permission>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"></uses-permission>
+    <uses-permission android:name="android.permission.BLUETOOTH"></uses-permission>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"></uses-permission>
+
+    <uses-sdk android:minSdkVersion="18"></uses-sdk>
+
+    <application android:icon="@drawable/icon" android:label="@string/app_name" android:debuggable="true">
+
+        <activity android:name=".MainView2"
+                  android:screenOrientation="portrait"
+                  android:label="@string/app_name">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".DictationView"
+                  android:screenOrientation="portrait"
+                  android:label="@string/app_name">
+        </activity>
+
+        <activity android:name=".DictationServiceView"
+                  android:screenOrientation="portrait"
+                  android:label="@string/app_name">
+        </activity>
+
+        <activity android:name=".TtsView"
+                  android:screenOrientation="portrait"
+                  android:label="@string/app_name">
+        </activity>
+
+        <activity
+                android:name="com.blake.voice.tasks.DisplayMessageActivity"
+                android:label="DisplayMessageActivity"
+                android:screenOrientation="portrait"
+                android:parentActivityName="com.nuance.nmdp.sample.DictationServiceView" >
+            <meta-data
+                    android:name="android.support.PARENT_ACTIVITY"
+                    android:value="com.nuance.nmdp.sample.DictationServiceView" />
+        </activity>
+
+
+        <activity
+                android:name="com.blake.HelloActivity"
+                android:screenOrientation="portrait"
+                android:label="@string/app_name" >
+        </activity>
+
+
+
+        <receiver android:name="com.blake.AutostartReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+            <category android:name="android.intent.category.HOME">
+            </category>
+        </receiver>
+
+        <service android:enabled="true" android:name="com.blake.StartListenerService" >
+            <intent-filter>
+                <action android:name="com.blake.StartListenerService">
+                </action>
+            </intent-filter>
+        </service>
+
+        <service android:enabled="true" android:name="com.blake.StartService" />
+
+    </application>
+
+
+</manifest> 

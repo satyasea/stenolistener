@@ -3,6 +3,7 @@ package com.nuance.nmdp.sample;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -17,6 +18,9 @@ public class MainView2 extends Activity {
     
     private static SpeechKit _speechKit;
     private static final String TAG = "MainView2";
+    public static final String PREFS_NAME = "MyPrefsFile";
+    public static String username;
+
 
     // Allow other activities to access the SpeechKit instance.
     public static SpeechKit getSpeechKit()
@@ -29,8 +33,10 @@ public class MainView2 extends Activity {
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main2);
+
+
         try {
-            Thread.sleep(10000);
+            Thread.sleep(3000);
             Toast.makeText(this, "Speech Kit Builder Sleeping", Toast.LENGTH_LONG).show();
         } catch(InterruptedException ex) {
             Thread.currentThread().interrupt();
@@ -76,24 +82,42 @@ public class MainView2 extends Activity {
                 {
                     // TODO: here is the entry point for calling the dictationView.
                     // TODO: The voice listener will replace the button.onclicklistener, and create intent instead
-
                     Intent intent = null;
-
-                    //    intent = new Intent(v.getContext(), DictationServiceView.class);
-
+                    //    intent = new Intent(v.getContext(), DictationServiceView.class)
                        intent = new Intent(v.getContext(), DictationView.class);
 
                     MainView2.this.startActivity(intent);
                 } else if (v == ttsButton)
                 {
-                    Intent intent = new Intent(v.getContext(), TtsView.class);
-                    MainView2.this.startActivity(intent);
+                    Intent intent = new Intent(v.getContext(), TtsNameView.class);
+                    startActivity(intent);
                 }
             }
         };
         
         dictationButton.setOnClickListener(l);
         ttsButton.setOnClickListener(l);
+
+        //handle username stuff after all the other crap is initialized, we want to then launch dictation name if not
+        // Restore preferences
+        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+        username = settings.getString("username", "bob");
+        if(username.equals("bob")){
+            Toast.makeText(this, "We have no user yet", Toast.LENGTH_LONG).show();
+            //todo: we launch the dictationnameview here
+
+           Intent intent = new Intent(this, DictationNameView.class);
+            startActivity(intent);
+           // username = "saraswati";
+
+        }else{
+            Toast.makeText(this, "Saved user is [ " + username + " ]", Toast.LENGTH_LONG).show();
+            //we don't do anything, user exists
+        }
+
+
+
+
     }
     
     @Override
@@ -104,6 +128,20 @@ public class MainView2 extends Activity {
             _speechKit.release();
             _speechKit = null;
         }
+    }
+
+
+    @Override
+    protected void onStop(){
+        super.onStop();
+        // We need an Editor object to make preference changes.
+        // All objects are from android.context.Context
+        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putString("username", username);
+        // Commit the edits!
+        editor.commit();
+
     }
     
     @Override

@@ -6,7 +6,7 @@
     <string name="radio_endPointerLong">Long</string>
     <string name="radio_endPointerNone">None</string>
     <string name="button_stop">Stop</string>
-    <string name="button_startTts">Get TTS</string>
+    <string name="button_startTts">Say My Name, Bitch!</string>
     <string name="button_startDictation">Dictate</string>
     <string name="title_dictation">Test Dictation</string>
     <string name="title_dictation_name">Please speak your name clearly.</string>
@@ -15,7 +15,7 @@
     <string name="app_name">AQ Voice App Start v 0006</string>
     <string name="title_main">Choose a feature to test</string>
     <string name="button_dictation">Dictation</string>
-    <string name="button_dictation_name">Listen, Bitch!</string>
+    <string name="button_dictation_name">Listen Now!</string>
     <string name="button_tts">TTS</string>
     <string-array name="arr_ttsVoices">
         <item>Samantha</item>

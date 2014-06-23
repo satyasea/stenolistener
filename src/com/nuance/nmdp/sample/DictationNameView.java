@@ -26,12 +26,14 @@ public class DictationNameView extends Activity
     private final Recognizer.Listener _listener;
     private Recognizer _currentRecognizer;
     private ListeningDialog _listeningDialog;
-    private ArrayAdapter<String> _arrayAdapter;
+   // private ArrayAdapter<String> _arrayAdapter;
     private boolean _destroyed;
 
     private static int listenTryCount;
 
     public static String username;
+
+    Button dictationButton = null;
 
     private class SavedState
     {
@@ -86,21 +88,21 @@ public class DictationNameView extends Activity
         super.onCreate(savedInstanceState);
 
         setVolumeControlStream(AudioManager.STREAM_MUSIC); // So that the 'Media Volume' applies to this activity
-        setContentView(R.layout.dictation_name);
+        setContentView(R.layout.dictation_name_q);
 
         _destroyed = false;
 
         // Use the same handler for both buttons
-        final Button dictationButton = (Button)findViewById(R.id.btn_startDictation);
+        dictationButton = (Button)findViewById(R.id.btn_startDictation);
      //   Button websearchButton = (Button)findViewById(R.id.btn_startWebsearch);
         Button.OnClickListener startListener = new Button.OnClickListener()
         {
             @Override
             public void onClick(View v) {
-                _listeningDialog.setText("Initializing...");
+                _listeningDialog.setText("Q is Listening...");
                 showDialog(LISTENING_DIALOG);
                 _listeningDialog.setStoppable(false);
-                setResults(new Recognition.Result[0]);
+            //    setResults(new Recognition.Result[0]);
                 _currentRecognizer = MainView2.getSpeechKit().createRecognizer(Recognizer.RecognizerType.Dictation, Recognizer.EndOfSpeechDetection.Long, "en_US", _listener, _handler);
                 _currentRecognizer.start();
             }
@@ -125,6 +127,7 @@ public class DictationNameView extends Activity
         */
 
         // Set up the list to display multiple results
+        /*
         ListView list = (ListView)findViewById(R.id.list_results);
         _arrayAdapter = new ArrayAdapter<String>(list.getContext(), R.layout.listitem)
         {
@@ -149,6 +152,7 @@ public class DictationNameView extends Activity
             }
         };
         list.setAdapter(_arrayAdapter);
+        */
 
         // Initialize the listening dialog
         createListeningDialog();
@@ -263,6 +267,8 @@ public class DictationNameView extends Activity
                 _listeningDialog.setLevel("");
                 _listeningDialog.setRecording(false);
                 _listeningDialog.setStoppable(false);
+              //  if (_listeningDialog.isShowing()) dismissDialog(LISTENING_DIALOG);
+
             }
 
             @Override
@@ -286,12 +292,13 @@ public class DictationNameView extends Activity
 
             @Override
             public void onResults(Recognizer recognizer, Recognition results) {
+                if (_listeningDialog.isShowing()) dismissDialog(LISTENING_DIALOG);
                 int count = results.getResultCount();
                 Recognition.Result[] rs = new Recognition.Result[count];
                 for (int i = 0; i < count; i++) {
                     rs[i] = results.getResult(i);
                 }
-                setResults(rs);
+               // setResults(rs);
                 // for debugging purpose: printing out the speechkit session id
                 android.util.Log.d("Nuance SampleVoiceApp", "Recognizer.Listener.onResults: session id ["
                         + MainView2.getSpeechKit().getSessionId() + "]");
@@ -305,14 +312,22 @@ public class DictationNameView extends Activity
                 // We need an Editor object to make preference changes.
                 // All objects are from android.context.Context
                 username = rs[0].getText();
-                Toast.makeText(DictationNameView.this, "AAA User saving [ " + username + " ]", Toast.LENGTH_LONG).show();
+
+                DictationNameView.this.dictationButton.setVisibility(View.INVISIBLE);
+                setResult(username);
+
+
+
+
                 SharedPreferences settings = getSharedPreferences(MainView2.PREFS_NAME, 0);
                 SharedPreferences.Editor editor = settings.edit();
                 editor.putString("username", username);
                 // Commit the edits!
                 editor.commit();
-                Intent i = new Intent(DictationNameView.this, MainView2.class);
-                startActivity(i);
+                Toast.makeText(DictationNameView.this, "AAA User saving [ " + username + " ]", Toast.LENGTH_LONG).show();
+
+            //    Intent i = new Intent(DictationNameView.this, MainView2.class);
+             //   startActivity(i);
 
             }
         };
@@ -323,10 +338,11 @@ public class DictationNameView extends Activity
     private void setResult(String result)
     {
         EditText t = (EditText)findViewById(R.id.text_DictationResult);
+        t.setVisibility(View.VISIBLE);
         if (t != null)
             t.setText(result);
     }
-
+/*
     private void setResults(Recognition.Result[] results)
     {
         _arrayAdapter.clear();
@@ -341,7 +357,7 @@ public class DictationNameView extends Activity
             setResult("");
         }
     }
-
+*/
     private void createListeningDialog()
     {
         _listeningDialog = new ListeningDialog(this);

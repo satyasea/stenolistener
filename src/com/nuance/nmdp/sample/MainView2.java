@@ -119,6 +119,17 @@ public class MainView2 extends Activity {
             }
         });
 
+        Button buttonChg = (Button)findViewById(R.id.btn_change);
+        buttonChg.setOnClickListener(new Button.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+               Intent intent = new Intent(v.getContext(), DictationNameView.class);
+                startActivity(intent);
+            }
+        });
+
 
 
 

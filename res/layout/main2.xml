@@ -18,5 +18,6 @@
 
     <Button android:layout_height="wrap_content" android:text="@string/button_dictation" android:layout_width="fill_parent" android:id="@+id/btn_dictation"></Button>
 <Button android:layout_height="wrap_content" android:text="@string/button_tts" android:layout_width="fill_parent" android:id="@+id/btn_tts"></Button>
+    <Button android:layout_height="wrap_content" android:text="Change My Name" android:layout_width="fill_parent" android:id="@+id/btn_change"></Button>
     <Button android:layout_height="wrap_content" android:text="QUIT" android:layout_width="fill_parent" android:id="@+id/btn_quit"></Button>
 </LinearLayout>

@@ -346,7 +346,7 @@ public class DictationNameView extends Activity
                 editor.putString("username", username);
                 // Commit the edits!
                 editor.commit();
-                Toast.makeText(DictationNameView.this, "Saving username [ " + username + " ]", Toast.LENGTH_LONG).show();
+                Toast.makeText(DictationNameView.this, "Q is learning about [ " + username + " ]", Toast.LENGTH_LONG).show();
 
 
 

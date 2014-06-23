@@ -9,48 +9,34 @@ import android.provider.ContactsContract;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.util.Log;
+import com.nuance.nmdp.sample.CommandView;
 import com.nuance.nmdp.sample.MainView2;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * Created by horse on 5/3/2014.
  */
 public class ActionTask {
 
-    private Activity source;
+    private CommandView source;
     public final static String EXTRA_MESSAGE = "com.blake.voice.tasks.actiontask.MESSAGE";
     private static String LOG_TAG = "Logging ActionTask";
 
 
-    public ActionTask(Activity src){
-        this.source = src;
+    public ActionTask(CommandView src){
+        this.source = (CommandView) src;
         //Supports phone call
         EndCallListener callListener = new EndCallListener();
         TelephonyManager mTM = (TelephonyManager) source.getSystemService(Context.TELEPHONY_SERVICE);
         mTM.listen(callListener, PhoneStateListener.LISTEN_CALL_STATE);
     }
 
-    public void processVoiceInput(String cmd){
-        String[] inputArray = cmd.toLowerCase().split(" ");
-        String action = inputArray[0];
-        // build recipient from first and last names
-        StringBuilder sb = new StringBuilder();
-        for(int i = 1; i < inputArray.length; i++){
-            sb.append(inputArray[i]);
-            sb.append(" ");
-        }
-        String rec = sb.toString().trim();
-        //call action
-        if(action.equals("email"))
-            openEmail(rec);
-        if(action.equals("telephone") ||
-                action.equals("call") ||
-                action.equals("cull") ||
-                action.equals("phone") ||
-                action.equals("called") )
-            dialContactPhone(rec);
-    }
 
-    private void openEmail(String recip){
+
+    public void sendTestEmail(String recip){
         if(recip.equals("james bond")){
             final Intent emailIntent = new Intent(android.content.Intent.ACTION_SEND);
             emailIntent.setType("plain/text");
@@ -73,7 +59,7 @@ public class ActionTask {
 
 
     //uses actual contacts info on phone
-    private void dialContactPhone(String contactName){
+    public void dialContactPhone(String contactName){
         Uri uri = ContactsContract.CommonDataKinds.Phone.CONTENT_URI;
         String[] projection    = new String[] {ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME,
                 ContactsContract.CommonDataKinds.Phone.NUMBER};

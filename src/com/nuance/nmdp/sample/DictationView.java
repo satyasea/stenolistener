@@ -1,5 +1,6 @@
 package com.nuance.nmdp.sample;
 
+import com.blake.voice.tasks.ActionCommand;
 import com.blake.voice.tasks.ActionTask;
 import com.blake.voice.tasks.DisplayMessageActivity;
 import com.nuance.nmdp.speechkit.Recognizer;
@@ -286,11 +287,46 @@ public class DictationView extends Activity
                 //here we can capture the text...
                 System.out.println("bedbug********************************results 0-" + rs[0].getText());
                 // openEmail(rs[0].getText());
-                 ActionTask task = new ActionTask(DictationView.this);
-                 task.processVoiceInput(rs[0].getText());
+                // ActionTask task = new ActionTask(DictationView.this);
+                 processVoiceInput(rs[0].getText());
 
             }
         };
+    }
+
+    public void processVoiceInput(String cmd){
+        String[] inputArray = cmd.toLowerCase().split(" ");
+        String action = inputArray[0];
+        // build recipient from first and last names
+        StringBuilder sb = new StringBuilder();
+        for(int i = 1; i < inputArray.length; i++){
+            sb.append(inputArray[i]);
+            sb.append(" ");
+        }
+        String rec = sb.toString().trim();
+        //call action
+
+     //   ActionTask task = new ActionTask(this);
+
+        if(action.equals("email")) {
+            ActionCommand emailCommand = new ActionCommand();
+            emailCommand.setCommand(action);
+            emailCommand.setRecipient(rec);
+    //        actionCommandList.add(emailCommand);
+       //     task.sendTestEmail(rec);
+        }
+        if(action.equals("telephone") ||
+                action.equals("dial") ||
+                action.equals("call") ||
+                action.equals("cull") ||
+                action.equals("phone") ||
+                action.equals("called") ) {
+            ActionCommand phoneCommand = new ActionCommand();
+            phoneCommand.setCommand(action);
+            phoneCommand.setRecipient(rec);
+        //    actionCommandList.add(phoneCommand);
+        //    task.dialContactPhone(rec);
+        }
     }
 
 

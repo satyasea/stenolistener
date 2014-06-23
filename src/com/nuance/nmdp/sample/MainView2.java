@@ -132,6 +132,16 @@ public class MainView2 extends Activity {
 
 
 
+        Button buttonWhat = (Button)findViewById(R.id.btn_what);
+        buttonWhat.setOnClickListener(new Button.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                Intent intent = new Intent(v.getContext(), TtsCommandsHistoryView.class);
+                startActivity(intent);
+            }
+        });
 
 
 

@@ -1,5 +1,9 @@
 package com.nuance.nmdp.sample;
 
+import android.content.SharedPreferences;
+import android.drm.DrmStore;
+import com.blake.db.MySQLiteHelper;
+import com.blake.voice.tasks.ActionCommand;
 import com.blake.voice.tasks.ActionTask;
 import com.blake.voice.tasks.DisplayMessageActivity;
 import com.nuance.nmdp.speechkit.Recognizer;
@@ -22,6 +26,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 
 public class CommandView extends Activity
 {
@@ -34,6 +43,68 @@ public class CommandView extends Activity
     private boolean _destroyed;
 
     private static int listenTryCount;
+
+  //  private static List<ActionCommand> actionCommandList = new ArrayList<ActionCommand>();
+    // Allow other activities to access the SpeechKit instance.
+  //  public static List getActionCommandList()
+   // {
+   //     return actionCommandList;
+   // }
+
+    MySQLiteHelper db = new MySQLiteHelper(this);
+
+    public void processVoiceInput(String cmd){
+        String[] inputArray = cmd.toLowerCase().split(" ");
+        String action = inputArray[0];
+        // build recipient from first and last names
+        StringBuilder sb = new StringBuilder();
+        for(int i = 1; i < inputArray.length; i++){
+            sb.append(inputArray[i]);
+            sb.append(" ");
+        }
+        String rec = sb.toString().trim();
+        //call action
+
+        ActionTask task = new ActionTask(this);
+
+        if(action.equals("email")) {
+            ActionCommand emailCommand = new ActionCommand(new Date(), "email", rec);
+          //  actionCommandList.add(emailCommand);
+            db.addCommand(emailCommand);
+            task.sendTestEmail(rec);
+        }
+        if(action.equals("telephone") ||
+                action.equals("dial") ||
+                action.equals("call") ||
+                action.equals("cull") ||
+                action.equals("phone") ||
+                action.equals("called") ) {
+            ActionCommand phoneCommand = new ActionCommand(new Date(), "phone", rec);
+           // actionCommandList.add(phoneCommand);
+            db.addCommand(phoneCommand);
+            task.dialContactPhone(rec);
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+       /* for(ActionCommand act: actionCommandList){
+            db.addCommand(act);
+        }
+        */
+    }
+
+    @Override
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+      //  actionCommandList = db.getAllCommands();
+    }
+
+
+
+
+
 
     private class SavedState
     {
@@ -201,6 +272,16 @@ public class CommandView extends Activity
 
     }
 
+
+
+
+
+
+
+
+
+
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -300,8 +381,9 @@ public class CommandView extends Activity
                 //here we can capture the text...
                 System.out.println("bedbug********************************results 0-" + rs[0].getText());
                 // openEmail(rs[0].getText());
-                ActionTask task = new ActionTask(CommandView.this);
-                task.processVoiceInput(rs[0].getText());
+
+
+                processVoiceInput(rs[0].getText());
 
             }
         };

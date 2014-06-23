@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
+import com.blake.StartListenerService;
 import com.nuance.nmdp.speechkit.Prompt;
 import com.nuance.nmdp.speechkit.SpeechKit;
 
@@ -37,7 +38,6 @@ public class MainView2 extends Activity {
 
         try {
             Thread.sleep(3000);
-            Toast.makeText(this, "Nuance Speech kit initializing...", Toast.LENGTH_LONG).show();
         } catch(InterruptedException ex) {
             Thread.currentThread().interrupt();
         }
@@ -60,9 +60,10 @@ public class MainView2 extends Activity {
         }
         Log.d(TAG, "online=" + online);
         Log.d(TAG, "networked=" + isNetWorkAvail);
-
+        //only initialize if speechkit is null....
         if (_speechKit == null && (online | isNetWorkAvail))
         {
+        //    Toast.makeText(this, "Nuance Speech kit initializing...", Toast.LENGTH_LONG).show();
 
             _speechKit = SpeechKit.initialize(getApplication().getApplicationContext(), AppInfo.SpeechKitAppId, AppInfo.SpeechKitServer, AppInfo.SpeechKitPort, AppInfo.SpeechKitSsl, AppInfo.SpeechKitApplicationKey);
             _speechKit.connect();
@@ -83,7 +84,7 @@ public class MainView2 extends Activity {
                     // TODO: here is the entry point for calling the dictationView. The voice listener will replace the button.onclicklistener, and create intent instead
                     Intent intent = null;
                     //    intent = new Intent(v.getContext(), DictationServiceView.class)
-                       intent = new Intent(v.getContext(), DictationView.class);
+                       intent = new Intent(v.getContext(), CommandView.class);
 
                     MainView2.this.startActivity(intent);
                 } else if (v == ttsButton)
@@ -96,6 +97,32 @@ public class MainView2 extends Activity {
         
         dictationButton.setOnClickListener(l);
         ttsButton.setOnClickListener(l);
+
+
+        Button buttonQ = (Button)findViewById(R.id.btn_quit);
+        buttonQ.setOnClickListener(new Button.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                _speechKit=null;
+                finish();
+
+                //start listener again, if we are quitting.
+                Intent service = new Intent(MainView2.this, StartListenerService.class);
+                startService(service);
+
+                Intent intent = new Intent(Intent.ACTION_MAIN);
+                intent.addCategory(Intent.CATEGORY_HOME);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+            }
+        });
+
+
+
+
+
 
 
         // Restore preferences

@@ -1,35 +1,33 @@
 package com.nuance.nmdp.sample;
 
+import com.blake.voice.tasks.ActionTask;
+import com.blake.voice.tasks.DisplayMessageActivity;
+import com.nuance.nmdp.speechkit.Recognizer;
+import com.nuance.nmdp.speechkit.Recognition;
+import com.nuance.nmdp.speechkit.SpeechError;
+
 import android.app.Activity;
 import android.app.Dialog;
-import android.app.Service;
 import android.content.DialogInterface;
-import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
+import android.content.DialogInterface.OnDismissListener;
 import android.graphics.Color;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.*;
-import com.blake.StartListenerService;
-import com.blake.voice.tasks.ActionTask;
-import com.blake.voice.tasks.DisplayMessageActivity;
-import com.nuance.nmdp.speechkit.Recognition;
-import com.nuance.nmdp.speechkit.Recognizer;
-import com.nuance.nmdp.speechkit.SpeechError;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ListView;
 
 
-public class DictationServiceView extends Activity
+public class CommandView extends Activity
 {
-
     private static final int LISTENING_DIALOG = 0;
-   private Handler _handler = null;
-
+    private Handler _handler = null;
     private final Recognizer.Listener _listener;
-
     private Recognizer _currentRecognizer;
     private ListeningDialog _listeningDialog;
     private ArrayAdapter<String> _arrayAdapter;
@@ -46,7 +44,7 @@ public class DictationServiceView extends Activity
         Handler Handler;
     }
 
-    public DictationServiceView()
+    public CommandView()
     {
         super();
         //TODO start listener here automatically?
@@ -55,8 +53,6 @@ public class DictationServiceView extends Activity
         _listeningDialog = null;
         _destroyed = true;
     }
-
-
 
     @Override
     protected void onPrepareDialog(int id, final Dialog dialog) {
@@ -92,13 +88,27 @@ public class DictationServiceView extends Activity
         super.onCreate(savedInstanceState);
 
         setVolumeControlStream(AudioManager.STREAM_MUSIC); // So that the 'Media Volume' applies to this activity
-        setContentView(R.layout.dictation);
+        setContentView(R.layout.command);
 
         _destroyed = false;
 
+
+        Button buttonMain = (Button)findViewById(R.id.btn_main);
+        buttonMain.setOnClickListener(new Button.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                Intent i = new Intent(CommandView.this, MainView2.class);
+                startActivity(i);
+            }
+        });
+
         // Use the same handler for both buttons
+
         final Button dictationButton = (Button)findViewById(R.id.btn_startDictation);
-       // Button websearchButton = (Button)findViewById(R.id.btn_startWebsearch);
+        Button websearchButton = (Button)findViewById(R.id.btn_startWebsearch);
+
         Button.OnClickListener startListener = new Button.OnClickListener()
         {
             @Override
@@ -116,7 +126,7 @@ public class DictationServiceView extends Activity
             }
         };
         dictationButton.setOnClickListener(startListener);
-       // websearchButton.setOnClickListener(startListener);
+        websearchButton.setOnClickListener(startListener);
 
         // TTS button will switch to the TtsView for the displayed text
         Button button = (Button)findViewById(R.id.btn_startTts);
@@ -128,7 +138,7 @@ public class DictationServiceView extends Activity
                 Intent intent = new Intent(v.getContext(), TtsView.class);
                 intent.putExtra(TtsView.TTS_KEY, t.getText().toString());
                 android.util.Log.d("Nuance SampleVoiceApp", "********************************Boooom-" + t.getText().toString());
-                DictationServiceView.this.startActivity(intent);
+                CommandView.this.startActivity(intent);
             }
         });
 
@@ -186,16 +196,8 @@ public class DictationServiceView extends Activity
         }
 
         //TODO: START THE LISTENER, we don't need to press no stinkin button
-       // _currentRecognizer = MainView2.getSpeechKit().createRecognizer(Recognizer.RecognizerType.Dictation, Recognizer.EndOfSpeechDetection.Long, "en_US", _listener, _handler);
-      //  _currentRecognizer.start();
-        _currentRecognizer=null;
-        Intent intent = new Intent(this,StartListenerService.class);
-        Toast.makeText(this, "Q Listener Service Started", Toast.LENGTH_LONG).show();
-        startService(intent);
-        Log.i("Autostart", "started");
-
-
-
+        _currentRecognizer = MainView2.getSpeechKit().createRecognizer(Recognizer.RecognizerType.Dictation, Recognizer.EndOfSpeechDetection.Long, "en_US", _listener, _handler);
+        _currentRecognizer.start();
 
     }
 
@@ -296,85 +298,16 @@ public class DictationServiceView extends Activity
                 android.util.Log.d("Nuance SampleVoiceApp", "Recognizer.Listener.onResults: session id ["
                         + MainView2.getSpeechKit().getSessionId() + "]");
                 //here we can capture the text...
-                //TODO look through phrases from results
                 System.out.println("bedbug********************************results 0-" + rs[0].getText());
                 // openEmail(rs[0].getText());
-                // ActionTask task = new ActionTask(DictationView.this);
-                //  task.processVoiceInput(rs[0].getText());
-                String START_WORD = "james bond";
-                boolean found = false;
-                for (int i = 0; i < rs.length; i++) {
-                    String line = rs[i].getText().toLowerCase();
-                    if (line.equals(START_WORD)) {
-                        found = true;
-                        listenTryCount=0;
-                        if (_listeningDialog.isShowing()) dismissDialog(LISTENING_DIALOG);
-                        _currentRecognizer = null;
-                        _listeningDialog.setRecording(false);
-                        runSteno();
-                        break;
-                    } else if (-1 != line.indexOf(START_WORD)) {
-                        found = true;
-                        listenTryCount=0;
-                        if (_listeningDialog.isShowing()) dismissDialog(LISTENING_DIALOG);
-                        _currentRecognizer = null;
-                        _listeningDialog.setRecording(false);
-                        runSteno();
-                        break;
-                    }
-                }
-                //TODO: if failed to find phrase yet, keep listening.
-                if (!found) {
-                    //TODO: if failed to find phrase three times, go back to main activity
-                    if(listenTryCount > 3){
-                        listenTryCount=0;
-                        if (_listeningDialog.isShowing()) dismissDialog(LISTENING_DIALOG);
-                        _currentRecognizer = null;
-                        _listeningDialog.setRecording(false);
-                        Intent intent = new Intent(DictationServiceView.this, MainView2.class);
-                        String message = "Listened three times!";
-                        intent.putExtra(ActionTask.EXTRA_MESSAGE, message);
-                        DictationServiceView.this.startActivity(intent);
-                    }else {
-                        _currentRecognizer = null;
-                        if (_currentRecognizer == null)
-                            _currentRecognizer = MainView2.getSpeechKit().createRecognizer(Recognizer.RecognizerType.Dictation, Recognizer.EndOfSpeechDetection.Long, "en_US", _listener, _handler);
-                        listenTryCount++;
-                        _currentRecognizer.start();
-                    }
-                }
+                ActionTask task = new ActionTask(CommandView.this);
+                task.processVoiceInput(rs[0].getText());
+
             }
         };
     }
 
 
-    private void runSteno(){
-        System.out.println("Blake Debug Logging runSteno from Activity Source: " + this.getClass() + " and starting " + DisplayMessageActivity.class);
-        Intent intent = new Intent(this, DisplayMessageActivity.class);
-        String message = "Did somebody just say James Bond?";
-        intent.putExtra(ActionTask.EXTRA_MESSAGE, message);
-        this.startActivity(intent);
-
-    }
-
-
-    private void openEmail(String command){
-        if(command.equalsIgnoreCase("email james bond")){
-            final Intent emailIntent = new Intent(Intent.ACTION_SEND);
-            emailIntent.setType("plain/text");
-            emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{"jamesbond@gmail.com"});
-            emailIntent.putExtra(Intent.EXTRA_SUBJECT, "confidential from james bond");
-            emailIntent.putExtra(Intent.EXTRA_TEXT, "");
-            DictationServiceView.this.startActivity(Intent.createChooser(emailIntent, "Mailing James Bond..."));
-        }else if(command.equalsIgnoreCase("email batman")){
-            final Intent emailIntent = new Intent(Intent.ACTION_SEND);
-            emailIntent.setType("plain/text");
-            emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{"batman@gmail.com"});
-            emailIntent.putExtra(Intent.EXTRA_SUBJECT, "confidential from the batcave");
-            emailIntent.putExtra(Intent.EXTRA_TEXT, "");
-            DictationServiceView.this.startActivity(Intent.createChooser(emailIntent, "Mailing Batman..."));
-        }
-    }
 
     private void setResult(String result)
     {
@@ -414,9 +347,9 @@ public class DictationServiceView extends Activity
                 if (!_destroyed)
                 {
                     // Remove the dialog so that it will be recreated next time.
-                    // This is necessary to avoid a bug in Android >= 1.6 where the
+                    // This is necessary to avoid a bug in Android >= 1.6 where the 
                     // animation stops working.
-                    DictationServiceView.this.removeDialog(LISTENING_DIALOG);
+                    CommandView.this.removeDialog(LISTENING_DIALOG);
                     createListeningDialog();
                 }
             }

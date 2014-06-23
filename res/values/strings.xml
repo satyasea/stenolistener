@@ -8,16 +8,16 @@
     <string name="button_stop">Stop</string>
     <string name="button_startTts">Say my name</string>
     <string name="button_startDictation">Dictate</string>
-    <string name="title_dictation">Test Dictation</string>
+    <string name="title_dictation">At your command...</string>
     <string name="title_dictation_name">Please speak your name clearly.</string>
     <string name="title_tts">Test TTS</string>
     <string name="hello">Hello Q!</string>
     <string name="app_name">Android Q alpha v0007</string>
-    <string name="title_main">Choose a feature to test</string>
-    <string name="button_dictation">Dictation</string>
+    <string name="title_main">Main Menu</string>
+    <string name="button_dictation">Commands</string>
     <string name="button_dictation_name">Tell Q your name</string>
-    <string name="button_tts_name">Say my name, Q</string>
-    <string name="button_tts">TTS</string>
+    <string name="button_tts_name">Say my name</string>
+    <string name="button_tts">Who am I?</string>
     <string-array name="arr_ttsVoices">
         <item>Samantha</item>
         <item>Tom</item>

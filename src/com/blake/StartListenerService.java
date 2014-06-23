@@ -122,20 +122,20 @@ public class StartListenerService extends Service {
             boolean isNetWorkAvail = false;
             if(isNetworkAvailable(getApplicationContext())){
                 isNetWorkAvail=true;
-                Toast.makeText(this, "AAA InternetAvailable", Toast.LENGTH_LONG).show();
+              //  Toast.makeText(this, "AAA InternetAvailable", Toast.LENGTH_LONG).show();
             }else{
-                Toast.makeText(this, "XXX Internet Not Available", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "Q Voice app Msg: Internet Not Available", Toast.LENGTH_LONG).show();
             }
             boolean online = false;
             if(isOnline()){
                 online=true;
-                Toast.makeText(this, "AAA online", Toast.LENGTH_LONG).show();
+             //   Toast.makeText(this, "AAA online", Toast.LENGTH_LONG).show();
             }else{
-                Toast.makeText(this, "XXX Not online", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "Q Voice app Msg: Not online", Toast.LENGTH_LONG).show();
             }
             Log.d(TAG, "online=" + online);
             Log.d(TAG, "networked=" + isNetWorkAvail);
-            Toast.makeText(this, "Speech Kit Builder Sleeping", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Q Voice App Service Initializing", Toast.LENGTH_LONG).show();
         } catch(InterruptedException ex) {
             Thread.currentThread().interrupt();
         }

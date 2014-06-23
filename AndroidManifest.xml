@@ -34,6 +34,17 @@
                   android:label="@string/app_name">
         </activity>
 
+        <activity android:name=".CommandView"
+                  android:parentActivityName="com.nuance.nmdp.sample.MainView2"
+                  android:screenOrientation="portrait"
+                  android:label="@string/app_name">
+            <meta-data
+                    android:name="android.support.PARENT_ACTIVITY"
+                    android:value="com.nuance.nmdp.sample.MainView2" />
+
+        </activity>
+
+
         <activity android:name=".DictationNameView"
                   android:screenOrientation="portrait"
                   android:label="@string/app_name">

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical" android:layout_height="fill_parent" android:layout_width="fill_parent">
+
+    <EditText android:layout_height="wrap_content" android:layout_width="fill_parent"  android:visibility="gone"  android:id="@+id/text_DictationResult" android:gravity="top|left" android:layout_below="@+id/text_titleDictation" android:minLines="2"></EditText>
+
+    <TextView android:layout_height="wrap_content" android:text="@string/title_dictation" android:textSize="25dp" android:layout_width="fill_parent" android:layout_alignParentTop="true" android:id="@+id/text_titleDictation"></TextView>
+
+
+
+    <ImageView
+            android:layout_below="@+id/text_name"
+            android:layout_height="wrap_content"
+            android:layout_width="fill_parent"
+            android:id="@+id/q"
+            android:src="@drawable/q" android:layout_marginTop="20dp" android:layout_marginRight="20dp"
+            android:layout_margin="20dp">
+    </ImageView>
+
+    <Button android:layout_height="wrap_content" android:id="@+id/btn_main" android:layout_below="@+id/text_currentTts" android:text="MENU" android:layout_width="343dp" android:layout_marginLeft="20dp"
+            android:layout_margin="20dp"></Button>
+
+
+    <LinearLayout android:layout_height="wrap_content" android:layout_width="fill_parent" android:id="@+id/layout_resultsList" android:layout_below="@+id/text_DictationResult" android:layout_above="@+id/layout_bottomButtons">
+        <ListView android:id="@+id/list_results" android:visibility="gone" android:layout_width="fill_parent" android:layout_height="fill_parent" android:paddingRight="20dip" android:paddingLeft="20dip"></ListView>
+    </LinearLayout>
+
+    <LinearLayout android:layout_height="wrap_content" android:layout_toRightOf="@+id/btn_startDictation" android:id="@+id/layout_bottomButtons" android:layout_alignParentBottom="true" android:layout_width="fill_parent" android:orientation="horizontal">
+        <Button android:layout_height="wrap_content" android:id="@+id/btn_startDictation" android:visibility="gone" android:text="@string/button_startDictation" android:layout_width="wrap_content" android:layout_weight="1"></Button>
+        <Button android:layout_width="wrap_content" android:layout_height="wrap_content" android:visibility="gone" android:id="@+id/btn_startWebsearch" android:text="@string/button_websearch" android:layout_weight="1"></Button>
+        <Button android:layout_height="wrap_content" android:id="@+id/btn_startTts" android:visibility="gone" android:text="@string/button_startTts" android:layout_alignParentRight="true" android:layout_weight="1" android:layout_width="wrap_content"></Button>
+    </LinearLayout>
+
+
+
+</LinearLayout>

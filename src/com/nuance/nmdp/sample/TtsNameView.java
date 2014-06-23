@@ -42,7 +42,7 @@ public class TtsNameView extends Activity
 
         SharedPreferences settings = getSharedPreferences(MainView2.PREFS_NAME, 0);
         final String username = settings.getString("username", "bob");
-        output = "Good afternoon, " + username + ". I am Q, at your service.";
+        output = "Hello, " + username + ". I am Q, at your service.";
 
 
 

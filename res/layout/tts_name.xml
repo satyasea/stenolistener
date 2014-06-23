@@ -3,7 +3,7 @@
   xmlns:android="http://schemas.android.com/apk/res/android"
   android:orientation="vertical" android:layout_height="fill_parent" android:layout_width="fill_parent">
 
-    <TextView android:layout_width="fill_parent" android:layout_height="wrap_content" android:id="@+id/text_name" android:textAlignment="center" android:textSize="30dp" android:text="Q Knows who you are."></TextView>
+    <TextView android:layout_width="fill_parent" android:layout_height="wrap_content" android:id="@+id/text_name" android:textAlignment="center" android:textSize="30dp" android:text="Q says your name."></TextView>
 
 
     <ImageView
@@ -16,6 +16,6 @@
     </ImageView>
 
 
-    <Button android:layout_height="75dp" android:id="@+id/btn_main" android:layout_below="@+id/text_currentTts" android:text="MENU" android:layout_width="336dp" android:layout_marginLeft="20dp"
+    <Button android:layout_height="wrap_content" android:id="@+id/btn_main" android:layout_below="@+id/text_currentTts" android:text="Return to Main" android:layout_width="343dp" android:layout_marginLeft="20dp"
             android:layout_margin="20dp"></Button>
 </LinearLayout>

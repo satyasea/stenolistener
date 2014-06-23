@@ -37,7 +37,7 @@ public class MainView2 extends Activity {
 
         try {
             Thread.sleep(3000);
-            Toast.makeText(this, "Speech Kit Builder Sleeping", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Nuance Speech kit initializing...", Toast.LENGTH_LONG).show();
         } catch(InterruptedException ex) {
             Thread.currentThread().interrupt();
         }
@@ -47,14 +47,14 @@ public class MainView2 extends Activity {
         boolean isNetWorkAvail = false;
         if(isNetworkAvailable(getApplicationContext())){
             isNetWorkAvail=true;
-            Toast.makeText(this, "AAA InternetAvailable", Toast.LENGTH_LONG).show();
+        //    Toast.makeText(this, "AAA InternetAvailable", Toast.LENGTH_LONG).show();
         }else{
             Toast.makeText(this, "XXX Internet Not Available", Toast.LENGTH_LONG).show();
         }
         boolean online = false;
         if(isOnline()){
             online=true;
-            Toast.makeText(this, "AAA online", Toast.LENGTH_LONG).show();
+          //  Toast.makeText(this, "AAA online", Toast.LENGTH_LONG).show();
         }else{
             Toast.makeText(this, "XXX Not online", Toast.LENGTH_LONG).show();
         }
@@ -80,8 +80,7 @@ public class MainView2 extends Activity {
             public void onClick(View v) {
                 if (v == dictationButton)
                 {
-                    // TODO: here is the entry point for calling the dictationView.
-                    // TODO: The voice listener will replace the button.onclicklistener, and create intent instead
+                    // TODO: here is the entry point for calling the dictationView. The voice listener will replace the button.onclicklistener, and create intent instead
                     Intent intent = null;
                     //    intent = new Intent(v.getContext(), DictationServiceView.class)
                        intent = new Intent(v.getContext(), DictationView.class);
@@ -98,23 +97,20 @@ public class MainView2 extends Activity {
         dictationButton.setOnClickListener(l);
         ttsButton.setOnClickListener(l);
 
-        //handle username stuff after all the other crap is initialized, we want to then launch dictation name if not
+
         // Restore preferences
         SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
         username = settings.getString("username", "bob");
+        //if first time through, we will name ourselves
         if(username.equals("bob")){
-            Toast.makeText(this, "We have no user yet", Toast.LENGTH_LONG).show();
+          //  Toast.makeText(this, "We have no user yet", Toast.LENGTH_LONG).show();
             //todo: we launch the dictationnameview here
 
            Intent intent = new Intent(this, DictationNameView.class);
             startActivity(intent);
            // username = "saraswati";
 
-        }else{
-            Toast.makeText(this, "Saved user is [ " + username + " ]", Toast.LENGTH_LONG).show();
-            //we don't do anything, user exists
         }
-
 
 
 

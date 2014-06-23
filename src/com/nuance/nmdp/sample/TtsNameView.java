@@ -1,6 +1,7 @@
 package com.nuance.nmdp.sample;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.media.AudioManager;
@@ -41,15 +42,27 @@ public class TtsNameView extends Activity
 
         SharedPreferences settings = getSharedPreferences(MainView2.PREFS_NAME, 0);
         final String username = settings.getString("username", "bob");
-        output = "Hello, " + username + ". We know all about you!";
+        output = "Good afternoon, " + username + ". I am Q, at your service.";
 
 
 
         setVolumeControlStream(AudioManager.STREAM_MUSIC); // So that the 'Media Volume' applies to this activity
         setContentView(R.layout.tts_name);
 
+
+         Button button = (Button)findViewById(R.id.btn_main);
+        button.setOnClickListener(new Button.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                Intent i = new Intent(TtsNameView.this, MainView2.class);
+                startActivity(i);
+            }
+        });
+
         // Configure "Stop" button
-        Button button = (Button)findViewById(R.id.btn_stopTts);
+      /*  Button button = (Button)findViewById(R.id.btn_stopTts);
         button.setOnClickListener(new Button.OnClickListener()
         {
             @Override
@@ -77,8 +90,9 @@ public class TtsNameView extends Activity
             }
         };
         button.setOnClickListener(clickListener);
-
+*/
         // Configure the spinner to change the Vocalizer voice when changed
+        /*
         Spinner spinner = (Spinner)findViewById(R.id.spin_ttsVoice);
         spinner.setOnItemSelectedListener(new Spinner.OnItemSelectedListener()
         {
@@ -96,6 +110,7 @@ public class TtsNameView extends Activity
                     } else
                     {
                         _vocalizer.setVoice(voice);
+
                     }
                 } 
             }
@@ -104,6 +119,7 @@ public class TtsNameView extends Activity
             public void onNothingSelected(AdapterView<?> arg0) {
             }
         });
+        */
         
         // Create Vocalizer listener
         Vocalizer.Listener vocalizerListener = new Vocalizer.Listener()
@@ -143,6 +159,7 @@ public class TtsNameView extends Activity
             _vocalizer = MainView2.getSpeechKit().createVocalizerWithLanguage("en_US", vocalizerListener, new Handler());
 
             // Get selected voice from the spinner and set the Vocalizer voice
+            /*
             Object item = spinner.getSelectedItem();
             if (item != null)
             {
@@ -151,15 +168,23 @@ public class TtsNameView extends Activity
                     _vocalizer.setVoice(voice);
                 }
             }
+            */
+
+            _vocalizer.setVoice("Tom");
 
             // Check for text from the intent (present if we came from DictationView)
+
             String tts = getIntent().getStringExtra(TTS_KEY);
+
             if (tts != null)
             {
-                EditText t = (EditText)findViewById(R.id.text_ttsSource);
+              /*  EditText t = (EditText)findViewById(R.id.text_ttsSource);
                 t.setText(tts);
-                clickListener.onClick(button); // Simulate button click
+               clickListener.onClick(button); // Simulate button click
+               */
             }
+
+
         } else
         {
             _vocalizer = savedState.Vocalizer;
@@ -170,17 +195,24 @@ public class TtsNameView extends Activity
             // the old TtsView activity instance.
             _vocalizer.setListener(vocalizerListener);
         }
+
+           // Todo: copied what was in the button action to here
+        _lastTtsContext = new Object();
+        _vocalizer.setVoice("Tom");
+        _vocalizer.speakString(output, _lastTtsContext);
+        updateCurrentText("Q is speaking...", Color.YELLOW, true);
     }
     
     private void updateCurrentText(String text, int color, boolean onlyIfBlank)
     {
-        TextView v = (TextView)findViewById(R.id.text_currentTts);
+     /*   TextView v = (TextView)findViewById(R.id.text_currentTts);
 
         if (!onlyIfBlank || v.getText().length() == 0)
         {
             v.setTextColor(color);
             v.setText(text);
         }
+        */
     }
     
     @Override

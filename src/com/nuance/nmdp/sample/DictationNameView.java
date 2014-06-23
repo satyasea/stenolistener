@@ -34,6 +34,7 @@ public class DictationNameView extends Activity
     public static String username;
 
     Button dictationButton = null;
+    Button ttsNameButton = null;
 
     private class SavedState
     {
@@ -92,9 +93,10 @@ public class DictationNameView extends Activity
 
         _destroyed = false;
 
-        // Use the same handler for both buttons
+
         dictationButton = (Button)findViewById(R.id.btn_startDictation);
-     //   Button websearchButton = (Button)findViewById(R.id.btn_startWebsearch);
+
+        //   Button websearchButton = (Button)findViewById(R.id.btn_startWebsearch);
         Button.OnClickListener startListener = new Button.OnClickListener()
         {
             @Override
@@ -108,6 +110,24 @@ public class DictationNameView extends Activity
             }
         };
         dictationButton.setOnClickListener(startListener);
+
+
+
+        ttsNameButton = (Button)findViewById(R.id.btn_tts_name);
+        Button.OnClickListener ttsNameListener = new Button.OnClickListener()
+        {
+            @Override
+            public void onClick(View v) {
+
+                   Intent i = new Intent(DictationNameView.this, TtsNameView.class);
+                  startActivity(i);
+
+            }
+        };
+        ttsNameButton.setOnClickListener(ttsNameListener);
+
+
+
       //  websearchButton.setOnClickListener(startListener);
 
         // TTS button will switch to the TtsView for the displayed text
@@ -242,7 +262,8 @@ public class DictationNameView extends Activity
             public void onRecordingBegin(Recognizer recognizer)
             {
                 _listeningDialog.setText("Q Recording...");
-                _listeningDialog.setStoppable(true);
+            //    _listeningDialog.setStoppable(true);
+                _listeningDialog.setStoppable(false);
                 _listeningDialog.setRecording(true);
 
                 // Create a repeating task to update the audio level
@@ -314,6 +335,7 @@ public class DictationNameView extends Activity
                 username = rs[0].getText();
 
                 DictationNameView.this.dictationButton.setVisibility(View.INVISIBLE);
+                DictationNameView.this.ttsNameButton.setVisibility(View.VISIBLE);
                 setResult(username);
 
 
@@ -324,10 +346,9 @@ public class DictationNameView extends Activity
                 editor.putString("username", username);
                 // Commit the edits!
                 editor.commit();
-                Toast.makeText(DictationNameView.this, "AAA User saving [ " + username + " ]", Toast.LENGTH_LONG).show();
+                Toast.makeText(DictationNameView.this, "Saving username [ " + username + " ]", Toast.LENGTH_LONG).show();
 
-            //    Intent i = new Intent(DictationNameView.this, MainView2.class);
-             //   startActivity(i);
+
 
             }
         };
@@ -337,10 +358,10 @@ public class DictationNameView extends Activity
 
     private void setResult(String result)
     {
-        EditText t = (EditText)findViewById(R.id.text_DictationResult);
-        t.setVisibility(View.VISIBLE);
+        TextView t = (TextView)findViewById(R.id.text_DictationResult);
+      //  t.setVisibility(View.VISIBLE);
         if (t != null)
-            t.setText(result);
+            t.setText("Your name is " + result + ".");
     }
 /*
     private void setResults(Recognition.Result[] results)

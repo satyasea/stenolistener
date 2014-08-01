@@ -139,7 +139,10 @@ public class StartListenerService extends Service {
         } catch(InterruptedException ex) {
             Thread.currentThread().interrupt();
         }
-        _speechKit = SpeechKit.initialize(getApplicationContext(), AppInfo.SpeechKitAppId, AppInfo.SpeechKitServer, AppInfo.SpeechKitPort, AppInfo.SpeechKitSsl, AppInfo.SpeechKitApplicationKey);
+
+      //  _speechKit = SpeechKit.initialize(getApplicationContext(), AppInfo.SpeechKitAppId, AppInfo.SpeechKitServer, AppInfo.SpeechKitPort, AppInfo.SpeechKitSsl, AppInfo.SpeechKitApplicationKey);
+        _speechKit = SpeechKitHolder.getSpeechKit(getApplicationContext());
+
         _speechKit.connect();
         // TODO: Keep an eye out for audio prompts not working on the Droid 2 or other 2.2 devices.
         Prompt beep = _speechKit.defineAudioPrompt(R.raw.beep);

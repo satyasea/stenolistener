@@ -1,6 +1,7 @@
 package com.nuance.nmdp.sample;
 
 import android.app.Activity;
+import android.content.Context;
 import com.nuance.nmdp.speechkit.SpeechKit;
 
 /**
@@ -10,9 +11,9 @@ public class SpeechKitHolder {
     private static SpeechKit speechKit;
     private SpeechKitHolder(){
     }
-    public static SpeechKit getSpeechKit(Activity owner){
+    public static SpeechKit getSpeechKit(Context context){
         if(speechKit == null){
-            speechKit = SpeechKit.initialize(owner.getApplication().getApplicationContext(), AppInfo.SpeechKitAppId, AppInfo.SpeechKitServer, AppInfo.SpeechKitPort, AppInfo.SpeechKitSsl, AppInfo.SpeechKitApplicationKey);
+            speechKit = SpeechKit.initialize(context, AppInfo.SpeechKitAppId, AppInfo.SpeechKitServer, AppInfo.SpeechKitPort, AppInfo.SpeechKitSsl, AppInfo.SpeechKitApplicationKey);
         }
         return speechKit;
     }

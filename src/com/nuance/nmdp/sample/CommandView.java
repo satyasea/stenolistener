@@ -47,7 +47,8 @@ public class CommandView extends Activity
    //     return actionCommandList;
    // }
 
-    //todo currently Q stores thingd locally, so for storing commands history
+    //todo currently Q stores things locally, so for storing commands history
+    //todo put into db on server
     MySQLiteHelper db = new MySQLiteHelper(this);
 
     public void processVoiceInput(String cmd){
@@ -61,22 +62,32 @@ public class CommandView extends Activity
         }
         String recip = sb.toString().trim();
         ActionTask task = new ActionTask(this);
-        //todo: make system smart part I here, whoo hoo
+        /*
+        make system smart part I here, whoo hoo
+         */
         ActionCommand actionCmd;
         List<String> emailActions = EmailActionCommandList.getEmailCommandList();
         List<String> phoneActions = PhoneActionCommandList.getPhoneCommandList();
+        List<String> clockActions = ClockWorkActionCommandList.getClockCommandList();
         if(emailActions.contains(cmdStr)) {
             actionCmd = new ActionCommand(new Date(), "email", recip);
             db.addCommand(actionCmd);
             task.sendTestEmail(recip);
-        }
-        if(phoneActions.contains(cmdStr) ) {
+        }else if(phoneActions.contains(cmdStr) ) {
             actionCmd = new ActionCommand(new Date(), "phone", recip);
             db.addCommand(actionCmd);
             task.dialContactPhone(recip);
-        }else{
-            //todo: make system smart part II here, whoo hoo
-            //loose sentence checking....
+        }else if(clockActions.contains(cmdStr) ) {
+            //todo: handle clock actions, placeholder for integration
+            actionCmd = new ActionCommand(new Date(), cmdStr, cmdStr + "-" + recip);
+            db.addCommand(actionCmd);
+            Intent intent = new Intent(this, TtsResponseView.class);
+            intent.putExtra(ActionTask.EXTRA_MESSAGE, cmdStr + "-" + recip);
+            startActivity(intent);
+        }else {
+            /*
+            make system smart part II here, whoo hoo
+             */
             Map<String, String> actionCommandMap = QuestionResponseMaps.getCommandMap();
             Map<String, String> actionResponseMap = QuestionResponseMaps.getResponseMap();
             Set<String> keys = actionCommandMap.keySet();
@@ -85,7 +96,6 @@ public class CommandView extends Activity
                     String value = actionCommandMap.get(key);
                     String response = actionResponseMap.get(value);
                     System.out.print("General Questions: " + key + "=" + response + ", ");
-                    //todo: handle loose command, placeholder for verbal response
                     Intent intent = new Intent(this, TtsResponseView.class);
                     intent.putExtra(ActionTask.EXTRA_MESSAGE, response);
                     startActivity(intent);
@@ -106,10 +116,6 @@ public class CommandView extends Activity
     }
 
 
-
-
-
-
     private class SavedState
     {
         String DialogText;
@@ -122,7 +128,6 @@ public class CommandView extends Activity
     public CommandView()
     {
         super();
-        //TODO start listener here automatically?
         _listener = createListener();
         _currentRecognizer = null;
         _listeningDialog = null;
@@ -275,13 +280,6 @@ public class CommandView extends Activity
         _currentRecognizer.start();
 
     }
-
-
-
-
-
-
-
 
 
 

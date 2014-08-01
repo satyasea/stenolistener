@@ -3,9 +3,7 @@ package com.nuance.nmdp.sample;
 import android.content.SharedPreferences;
 import android.drm.DrmStore;
 import com.blake.db.MySQLiteHelper;
-import com.blake.voice.tasks.ActionCommand;
-import com.blake.voice.tasks.ActionTask;
-import com.blake.voice.tasks.DisplayMessageActivity;
+import com.blake.voice.tasks.*;
 import com.nuance.nmdp.speechkit.Recognizer;
 import com.nuance.nmdp.speechkit.Recognition;
 import com.nuance.nmdp.speechkit.SpeechError;
@@ -27,9 +25,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 
 public class CommandView extends Activity
@@ -51,54 +47,62 @@ public class CommandView extends Activity
    //     return actionCommandList;
    // }
 
+    //todo currently Q stores thingd locally, so for storing commands history
     MySQLiteHelper db = new MySQLiteHelper(this);
 
     public void processVoiceInput(String cmd){
         String[] inputArray = cmd.toLowerCase().split(" ");
-        String action = inputArray[0];
+        String cmdStr = inputArray[0];
         // build recipient from first and last names
         StringBuilder sb = new StringBuilder();
         for(int i = 1; i < inputArray.length; i++){
             sb.append(inputArray[i]);
             sb.append(" ");
         }
-        String rec = sb.toString().trim();
-        //call action
-
+        String recip = sb.toString().trim();
         ActionTask task = new ActionTask(this);
-
-        if(action.equals("email")) {
-            ActionCommand emailCommand = new ActionCommand(new Date(), "email", rec);
-          //  actionCommandList.add(emailCommand);
-            db.addCommand(emailCommand);
-            task.sendTestEmail(rec);
+        //todo: make system smart part I here, whoo hoo
+        ActionCommand actionCmd;
+        List<String> emailActions = EmailActionCommandList.getEmailCommandList();
+        List<String> phoneActions = PhoneActionCommandList.getPhoneCommandList();
+        if(emailActions.contains(cmdStr)) {
+            actionCmd = new ActionCommand(new Date(), "email", recip);
+            db.addCommand(actionCmd);
+            task.sendTestEmail(recip);
         }
-        if(action.equals("telephone") ||
-                action.equals("dial") ||
-                action.equals("call") ||
-                action.equals("cull") ||
-                action.equals("phone") ||
-                action.equals("called") ) {
-            ActionCommand phoneCommand = new ActionCommand(new Date(), "phone", rec);
-           // actionCommandList.add(phoneCommand);
-            db.addCommand(phoneCommand);
-            task.dialContactPhone(rec);
+        if(phoneActions.contains(cmdStr) ) {
+            actionCmd = new ActionCommand(new Date(), "phone", recip);
+            db.addCommand(actionCmd);
+            task.dialContactPhone(recip);
+        }else{
+            //todo: make system smart part II here, whoo hoo
+            //loose sentence checking....
+            Map<String, String> actionCommandMap = QuestionResponseMaps.getCommandMap();
+            Map<String, String> actionResponseMap = QuestionResponseMaps.getResponseMap();
+            Set<String> keys = actionCommandMap.keySet();
+            for(String key: keys){
+                if(cmd.equalsIgnoreCase(key)){
+                    String value = actionCommandMap.get(key);
+                    String response = actionResponseMap.get(value);
+                    System.out.print("General Questions: " + key + "=" + response + ", ");
+                    //todo: handle loose command, placeholder for verbal response
+                    Intent intent = new Intent(this, TtsResponseView.class);
+                    intent.putExtra(ActionTask.EXTRA_MESSAGE, response);
+                    startActivity(intent);
+                    break;
+                }
+            }
         }
     }
 
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
         super.onSaveInstanceState(savedInstanceState);
-       /* for(ActionCommand act: actionCommandList){
-            db.addCommand(act);
-        }
-        */
     }
 
     @Override
     public void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-      //  actionCommandList = db.getAllCommands();
     }
 
 

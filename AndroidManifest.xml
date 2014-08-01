@@ -75,6 +75,10 @@
                   android:screenOrientation="portrait"
                   android:label="@string/app_name">
         </activity>
+        <activity android:name=".TtsResponseView"
+                  android:screenOrientation="portrait"
+                  android:label="@string/app_name">
+        </activity>
 
         <activity
                 android:name="com.blake.voice.tasks.DisplayMessageActivity"

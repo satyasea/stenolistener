@@ -64,8 +64,8 @@ public class MainView2 extends Activity {
         if (_speechKit == null && (online | isNetWorkAvail))
         {
         //    Toast.makeText(this, "Nuance Speech kit initializing...", Toast.LENGTH_LONG).show();
-
-            _speechKit = SpeechKit.initialize(getApplication().getApplicationContext(), AppInfo.SpeechKitAppId, AppInfo.SpeechKitServer, AppInfo.SpeechKitPort, AppInfo.SpeechKitSsl, AppInfo.SpeechKitApplicationKey);
+            //todo shared by all activities in app, static speechkit is initialized by singleton holder of static speechkit
+            _speechKit = SpeechKitHolder.getSpeechKit(this);
             _speechKit.connect();
             // TODO: Keep an eye out for audio prompts not working on the Droid 2 or other 2.2 devices.
             Prompt beep = _speechKit.defineAudioPrompt(R.raw.beep);

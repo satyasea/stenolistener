@@ -32,6 +32,9 @@ public class StartListenerService extends Service {
     private static final String TAG = "StartListenerService";
 
 
+    private static SpeechKit _speechKit;
+
+
     // private static final int LISTENING_DIALOG = 0;
     private Handler _handler = null;
     private final Recognizer.Listener _listener;
@@ -115,7 +118,6 @@ public class StartListenerService extends Service {
 
 
 
-    private static SpeechKit _speechKit;
     private void initSpeechKit(){
         try {
             Thread.sleep(10000);

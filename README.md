@@ -1,6 +1,6 @@
 
 
-stenolistener v008
+stenolistener (Q) alpha v008
 + Singleton speechkit for main app and listener
 + Smart Commands and TalkBack
 
@@ -23,14 +23,15 @@ telephone
 dial
 call
 
-clock: (clock is only stubbed with commands, clockwork not yet in Q app)
+clock (clock is only stubbed with commands, clockwork not yet in Q app):
 clock
 punch
 check
 log
 
+TalkBack is where input statements or questions are mapped to responses, so that Q can respond to a variety of conversational statements, questions, or commands with appropriate responses including profanity.
 
-talk:
+available input statements (not commands yet, just wired into system as conversation):
 say my name bitch
 what's my name
 who am I
